@@ -16,4 +16,10 @@ public static class ServiceCollectionExtensions
             .AddSingleton<ISearchIndexTrigger, SearchIndexTrigger>()
             .AddHostedService<JustSearchBackgroundService>();
     }
+    
+    public static IServiceCollection AddSearchIndexDataProvider<T>(this IServiceCollection serviceCollection)
+        where T : class, ISearchIndexDataProvider
+    {
+        return serviceCollection.AddScoped<ISearchIndexDataProvider, T>();
+    }
 }
