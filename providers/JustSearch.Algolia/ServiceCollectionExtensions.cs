@@ -33,6 +33,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddAlgoliaProvider(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddScoped<ISearchIndexProvider, AlgoliaProvider>();
+            .AddSingleton<ISearchIndexProvider, AlgoliaProvider>();
     }
 }

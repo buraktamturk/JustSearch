@@ -33,6 +33,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddTypeSenseProvider(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddScoped<ISearchIndexProvider, TypesenseProvider>();
+            .AddSingleton<ISearchIndexProvider, TypesenseProvider>();
     }
 }
