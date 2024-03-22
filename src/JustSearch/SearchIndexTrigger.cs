@@ -6,11 +6,9 @@ namespace JustSearch;
 internal sealed class SearchIndexTrigger : ISearchIndexTrigger
 {
     private readonly SearchIndexJobChannel _dataProviderChannel;
-    private readonly IEnumerable<ISearchIndexDataProvider> _dataProviders;
     
-    internal SearchIndexTrigger(SearchIndexJobChannel dataProviderChannel, IEnumerable<ISearchIndexDataProvider> dataProviders)
+    internal SearchIndexTrigger(SearchIndexJobChannel dataProviderChannel)
     {
-        _dataProviders = dataProviders;
         _dataProviderChannel = dataProviderChannel;
     }
     

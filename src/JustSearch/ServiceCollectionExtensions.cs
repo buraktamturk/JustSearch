@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
 
         return serviceCollection
             .AddSingleton<IIndexPrefix>(new IndexPrefix(options.Prefix))
-            .AddSingleton<JustSearchOptions>()
+            .AddSingleton(options)
             .AddSingleton<SearchIndexJobChannel>()
             .AddSingleton<ISearchIndexTrigger, SearchIndexTrigger>()
             .AddHostedService<JustSearchBackgroundService>();
