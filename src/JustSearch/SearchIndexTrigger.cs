@@ -16,16 +16,23 @@ internal sealed class SearchIndexTrigger : ISearchIndexTrigger
     {
         return _dataProviderChannel.Queue(null);
     }
+    
+    private static ISearchIndexDataProvider CreateDataProvider<T>(IServiceScope serviceScope) where T : ISearchIndexDataProvider
+    {
+        return serviceScope.ServiceProvider
+            .GetRequiredService<IEnumerable<ISearchIndexDataProvider>>()
+            .First(a => a is T);
+    }
 
     public ISearchIndexTriggerTask Sync<T>() where T : ISearchIndexDataProvider
     {
-        return _dataProviderChannel.Queue([static e => e.ServiceProvider.GetRequiredService<T>()]);
+        return _dataProviderChannel.Queue([static e => CreateDataProvider<T>(e)]);
     }
 
     public ISearchIndexTriggerTask Upsert<T>(IAsyncEnumerable<ISearchable> items) where T : ISearchIndexDataProvider
     {
         return _dataProviderChannel.Queue([e => new SearchIndexDataProviderProxy(
-            e.ServiceProvider.GetRequiredService<T>(),
+            CreateDataProvider<T>(e),
             items: items
         )]);
     }
@@ -48,7 +55,7 @@ internal sealed class SearchIndexTrigger : ISearchIndexTrigger
     public ISearchIndexTriggerTask Delete<T>(IAsyncEnumerable<string> ids) where T : ISearchIndexDataProvider
     {
         return _dataProviderChannel.Queue([e => new SearchIndexDataProviderProxy(
-            e.ServiceProvider.GetRequiredService<T>(),
+            CreateDataProvider<T>(e),
             itemsToDelete: ids
         )]);
     }

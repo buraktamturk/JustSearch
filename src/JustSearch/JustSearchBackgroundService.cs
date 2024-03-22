@@ -41,6 +41,7 @@ internal sealed class JustSearchBackgroundService : BackgroundService
             } catch (OperationCanceledException) {
                 tsc.SetCanceled(stoppingToken);
             } catch (Exception e) {
+                _logger.LogError(e, "Error running JustSearch on trigger.");
                 tsc.SetException(e);
             }
         }
