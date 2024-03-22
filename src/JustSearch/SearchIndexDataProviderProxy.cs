@@ -8,7 +8,7 @@ internal sealed class SearchIndexDataProviderProxy : ISearchIndexDataProvider
     private readonly IAsyncEnumerable<ISearchable>? _items;
     private readonly IAsyncEnumerable<string>? _itemsToDelete;
     
-    public SearchIndexDataProviderProxy(
+    internal SearchIndexDataProviderProxy(
         ISearchIndexDataProvider searchIndexDataProviderImplementation,
         IAsyncEnumerable<ISearchable>? items = null,
         IAsyncEnumerable<string>? itemsToDelete = null

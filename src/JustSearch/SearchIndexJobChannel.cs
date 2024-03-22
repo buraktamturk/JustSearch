@@ -8,7 +8,7 @@ internal sealed class SearchIndexJobChannel
 {
     private readonly Channel<Job> _channel;
     
-    internal SearchIndexJobChannel()
+    public SearchIndexJobChannel()
     {
         _channel = Channel.CreateBounded<Job>(int.MaxValue);
     }

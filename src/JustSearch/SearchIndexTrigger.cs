@@ -7,7 +7,7 @@ internal sealed class SearchIndexTrigger : ISearchIndexTrigger
 {
     private readonly SearchIndexJobChannel _dataProviderChannel;
     
-    internal SearchIndexTrigger(SearchIndexJobChannel dataProviderChannel)
+    public SearchIndexTrigger(SearchIndexJobChannel dataProviderChannel)
     {
         _dataProviderChannel = dataProviderChannel;
     }
