@@ -22,6 +22,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Tests", "tests\J
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Typesense.Tests", "providers\typesense\JustSearch.Typesense.Tests\JustSearch.Typesense.Tests.csproj", "{F99191D0-41C4-4EC9-B8D7-ED792499BF2A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project Files", "Project Files", "{02DB231C-C991-474A-980C-3682062833D4}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\release.yml = .github\workflows\release.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
