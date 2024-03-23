@@ -1,8 +1,6 @@
 # JustSearch
 
-This library provides an easy integration to Algolia and TypeSense search engines.
-
-More providers are planned to be added.
+This library provides an easy integration to Algolia, TypeSense and MeiliSearch engines. Easy to switch between them or combine them for redundancy.
 
 ## Usage
 
@@ -44,7 +42,10 @@ builder.Services
         {
             new Node("localhost", "8108", "http")
         };
-    });
+    })
+    
+    // Or MeiliSearch
+    .AddMeiliSearchProvider("http://localhost:7700", "masterKey");
 ```
 
 ### Configuring Data Source
