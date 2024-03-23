@@ -111,10 +111,10 @@ public sealed class TypesenseProvider : ISearchIndexProvider
             .GetSynonyms()
             .ToListAsync();
 
-        int added = 0;
+        var added = 0;
         foreach (var localSynonym in localSynonyms)
         {
-            var remoteSynonym = remoteSynonyms.Synonyms.FirstOrDefault(a => a.Synonyms.SequenceEqual(localSynonym.Synonyms));
+            var remoteSynonym = remoteSynonyms.Synonyms.FirstOrDefault(a => a.Root == (localSynonym is IOneWaySynonym {} b ? b.Root : null) && a.Synonyms.SequenceEqual(localSynonym.Synonyms));
             if (remoteSynonym is null)
             {
                 await _typesenseClient.UpsertSynonym(collectionName, localSynonym.Id, new SynonymSchema(localSynonym.Synonyms)
@@ -126,10 +126,10 @@ public sealed class TypesenseProvider : ISearchIndexProvider
         }
         _logger.LogInformation("TypeSense {index} added {added} synonyms", collectionName, added);
 
-        int deleted = 0;
+        var deleted = 0;
         foreach (var remoteSynonym in remoteSynonyms.Synonyms)
         {
-            var localSynonym = localSynonyms.FirstOrDefault(a => a.Synonyms.SequenceEqual(remoteSynonym.Synonyms));
+            var localSynonym = localSynonyms.FirstOrDefault(a => (a is not IOneWaySynonym b || b.Root == remoteSynonym.Root) && a.Synonyms.SequenceEqual(remoteSynonym.Synonyms));
             if (localSynonym is null)
             {
                 await _typesenseClient.DeleteSynonym(collectionName, remoteSynonym.Id);
