@@ -22,4 +22,4 @@ jobs:
       - name: Publish packages
         run: |
           dotnet nuget push src/*/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source "https://api.nuget.org/v3/index.json"
-          dotnet nuget push providers/*/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source "https://api.nuget.org/v3/index.json"
+          dotnet nuget push providers/*/*/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source "https://api.nuget.org/v3/index.json"

@@ -26,6 +26,11 @@ internal sealed class SearchIndexDataProviderProxy : ISearchIndexDataProvider
         return _searchIndexDataProviderImplementation.GetFields();
     }
 
+    public IAsyncEnumerable<ISynonym> GetSynonyms()
+    {
+        return _searchIndexDataProviderImplementation.GetSynonyms();
+    }
+
     public IAsyncEnumerable<ISearchable> Get(DateTimeOffset? updatedSince = null)
     {
         return _items ?? AsyncEnumerable.Empty<Searchable>();

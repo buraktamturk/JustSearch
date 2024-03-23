@@ -12,13 +12,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "providers", "providers", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "algolia", "algolia", "{522984CE-E320-41C2-A53D-1AAF022A1F8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Algolia", "providers\JustSearch.Algolia\JustSearch.Algolia.csproj", "{ACFD00F4-706A-4CE8-9BAD-38516BB86851}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Algolia", "providers\algolia\JustSearch.Algolia\JustSearch.Algolia.csproj", "{ACFD00F4-706A-4CE8-9BAD-38516BB86851}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "typesense", "typesense", "{2BF70FD2-E05A-450E-9E1B-E74884CC8C2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Typesense", "providers\JustSearch.Typesense\JustSearch.Typesense.csproj", "{0F176877-706A-4774-98DD-7132261BBAB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Typesense", "providers\typesense\JustSearch.Typesense\JustSearch.Typesense.csproj", "{0F176877-706A-4774-98DD-7132261BBAB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Tests", "tests\JustSearch.Tests\JustSearch.Tests.csproj", "{48904515-BCCC-42CB-80D4-5213536751DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSearch.Typesense.Tests", "providers\typesense\JustSearch.Typesense.Tests\JustSearch.Typesense.Tests.csproj", "{F99191D0-41C4-4EC9-B8D7-ED792499BF2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,7 @@ Global
 		{2BF70FD2-E05A-450E-9E1B-E74884CC8C2F} = {BF2F7EEB-510A-4086-B4BA-66355924C2C6}
 		{0F176877-706A-4774-98DD-7132261BBAB4} = {2BF70FD2-E05A-450E-9E1B-E74884CC8C2F}
 		{48904515-BCCC-42CB-80D4-5213536751DB} = {26AD01D9-3B1C-4E20-BFDC-F46A107B4907}
+		{F99191D0-41C4-4EC9-B8D7-ED792499BF2A} = {2BF70FD2-E05A-450E-9E1B-E74884CC8C2F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{216BC169-FFE3-45D6-A346-6093730560A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -55,5 +58,9 @@ Global
 		{48904515-BCCC-42CB-80D4-5213536751DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48904515-BCCC-42CB-80D4-5213536751DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48904515-BCCC-42CB-80D4-5213536751DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F99191D0-41C4-4EC9-B8D7-ED792499BF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F99191D0-41C4-4EC9-B8D7-ED792499BF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F99191D0-41C4-4EC9-B8D7-ED792499BF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F99191D0-41C4-4EC9-B8D7-ED792499BF2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

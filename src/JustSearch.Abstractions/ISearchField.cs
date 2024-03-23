@@ -1,10 +1,25 @@
 namespace JustSearch.Abstractions;
 
+public enum SearchFieldType
+{
+    Unknown,
+    String,
+    Int32,
+    Int64,
+    Float,
+    Bool,
+    Object
+}
+
 public interface ISearchField
 {
     public string Name { get; init; }
     
-    public bool IsNumber { get; init; }
+    public SearchFieldType Type { get; init; }
+    
+    public bool IsArray { get; init; }
+    
+    public string? Locale { get; init; }
     
     public bool IsFacet { get; init; }
     

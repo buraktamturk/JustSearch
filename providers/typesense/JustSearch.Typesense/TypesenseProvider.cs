@@ -44,6 +44,10 @@ public sealed class TypesenseProvider : ISearchIndexProvider
         var fields = await dataProvider.GetFields().ToListAsync(token);
         var collection = await GetOrCreateCollection(indexName, fields);
 
+        var locales = fields.Select(a => a.Locale).Where(a => !string.IsNullOrWhiteSpace(a)).Distinct();
+        if (locales.Any())
+            await SyncSynonyms(collection.Name, dataProvider, locales);
+        
         var indexLastUpdatedAt = await GetLastUpdated(collection.Name);
         
         var count = 0;
@@ -70,7 +74,7 @@ public sealed class TypesenseProvider : ISearchIndexProvider
             {
                 deleted += data.Count;
                 
-                await _typesenseClient.DeleteDocuments(collection.Name, $"filter_id=id: [{string.Join(",", data)}]");
+                await _typesenseClient.DeleteDocuments(collection.Name, $"id: [{string.Join(",", data)}]");
             }
         }
         
@@ -87,13 +91,51 @@ public sealed class TypesenseProvider : ISearchIndexProvider
         try {
             var aliases = await _typesenseClient.ListCollectionAliases();
             return aliases.CollectionAliases
-                .Where(a => a.Name.StartsWith(collectionName))
+                .Where(a => a.CollectionName == collectionName)
                 .Select(alias => (DateTimeOffset?)DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(alias.Name[(alias.Name.LastIndexOf('-') + 1)..])))
                 .DefaultIfEmpty()
                 .Max();
         } catch (TypesenseApiNotFoundException) {
             return null;
         }
+    }
+
+    private async Task SyncSynonyms(string collectionName, ISearchIndexDataProvider dataProvider, IEnumerable<string> locales)
+    {
+        _logger.LogInformation("TypeSense {index} updating synonyms", collectionName);
+
+        var remoteSynonyms = await _typesenseClient
+            .ListSynonyms(collectionName);
+        
+        var localSynonyms = await dataProvider
+            .GetSynonyms()
+            .ToListAsync();
+
+        int added = 0;
+        foreach (var localSynonym in localSynonyms)
+        {
+            var remoteSynonym = remoteSynonyms.Synonyms.FirstOrDefault(a => a.Synonyms.SequenceEqual(localSynonym.Synonyms));
+            if (remoteSynonym is null)
+            {
+                await _typesenseClient.UpsertSynonym(collectionName, localSynonym.Id, new SynonymSchema(localSynonym.Synonyms)
+                {
+                    Root = localSynonym is IOneWaySynonym a ? a.Root : null
+                });
+                ++added;
+            }
+        }
+        _logger.LogInformation("TypeSense {index} added {added} synonyms", collectionName, added);
+
+        int deleted = 0;
+        foreach (var remoteSynonym in remoteSynonyms.Synonyms)
+        {
+            var localSynonym = localSynonyms.FirstOrDefault(a => a.Synonyms.SequenceEqual(remoteSynonym.Synonyms));
+            if (localSynonym is null)
+            {
+                await _typesenseClient.DeleteSynonym(collectionName, remoteSynonym.Id);
+            }
+        }
+        _logger.LogInformation("TypeSense {index} deleted {deleted} synonyms.", collectionName, deleted);
     }
     
     private async Task SetLastUpdated(string collectionName, DateTimeOffset lastUpdated)
@@ -120,8 +162,8 @@ public sealed class TypesenseProvider : ISearchIndexProvider
 
     private async Task<CollectionResponse> GetOrCreateCollection(string name, IReadOnlyCollection<ISearchField> fields)
     {
-        var _fields = fields.Select(a => new Field(a.Name, a.IsNumber ? FieldType.Float : FieldType.Auto, a.IsFacet,
-            !a.IsSortable, a.IsFacet || a.IsFilterable || a.IsSearchable || a.IsSortable, a.IsSortable))
+        var _fields = fields.Select(a => new Field(a.Name, ToFieldType(a.Type, a.IsArray), a.IsFacet,
+            !a.IsSortable, a.IsFacet || a.IsFilterable || a.IsSearchable || a.IsSortable, a.IsSortable, locale: a.Locale))
             .ToList();
         
         CollectionResponse collection;
@@ -191,4 +233,49 @@ public sealed class TypesenseProvider : ISearchIndexProvider
             }
         }
     }
+/*
+    private static (SearchFieldType, bool?) ToSearchFieldType(FieldType fieldType)
+        => fieldType switch
+        {
+            FieldType.Auto => (SearchFieldType.Unknown, null),
+            FieldType.AutoString => (SearchFieldType.Unknown, null),
+            
+            FieldType.String => (SearchFieldType.String, false),
+            FieldType.Int32 => (SearchFieldType.Int32, false),
+            FieldType.Int64 => (SearchFieldType.Int64, false),
+            FieldType.Float => (SearchFieldType.Float, false),
+            FieldType.Bool => (SearchFieldType.Bool, false),
+            FieldType.Object => (SearchFieldType.Object, false),
+            
+            FieldType.StringArray => (SearchFieldType.String, true),
+            FieldType.Int32Array => (SearchFieldType.Int32, true),
+            FieldType.Int64Array => (SearchFieldType.Int64, true),
+            FieldType.FloatArray => (SearchFieldType.Float, true),
+            FieldType.BoolArray => (SearchFieldType.Bool, true),
+            FieldType.ObjectArray => (SearchFieldType.Object, true),
+            
+            _ => throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, null)
+        };
+*/
+    private static FieldType ToFieldType(SearchFieldType fieldType, bool isArray)
+        => (fieldType, isArray) switch
+        {
+            (SearchFieldType.Unknown, true or false) => FieldType.Auto,
+            
+            (SearchFieldType.String, false) => FieldType.String,
+            (SearchFieldType.Int32, false) => FieldType.Int32,
+            (SearchFieldType.Int64, false) => FieldType.Int64,
+            (SearchFieldType.Float, false) => FieldType.Float,
+            (SearchFieldType.Bool, false) => FieldType.Bool,
+            (SearchFieldType.Object, false) => FieldType.Object,
+            
+            (SearchFieldType.String, true) => FieldType.StringArray,
+            (SearchFieldType.Int32, true) => FieldType.Int32Array,
+            (SearchFieldType.Int64, true) => FieldType.Int64Array,
+            (SearchFieldType.Float, true) => FieldType.FloatArray,
+            (SearchFieldType.Bool, true) => FieldType.BoolArray,
+            (SearchFieldType.Object, true) => FieldType.ObjectArray,
+            
+            _ => throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, null)
+        };
 }

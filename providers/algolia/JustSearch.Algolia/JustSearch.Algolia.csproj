@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\JustSearch.Abstractions\JustSearch.Abstractions.csproj" />
+      <ProjectReference Include="..\..\..\src\JustSearch.Abstractions\JustSearch.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
