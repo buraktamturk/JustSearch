@@ -107,7 +107,7 @@ public sealed class MeiliSearchProvider : ISearchIndexProvider
             var metaIndex = _client.Index($"{_indexPrefix.Prefix}MetaCollections");
             var data = await metaIndex.GetDocumentAsync<Metadata>(indexName);
             return data is null ? null : DateTimeOffset.FromUnixTimeMilliseconds(data.UpdatedAt);
-        } catch (MeilisearchApiError e) when (e.Code == "index_not_found") {
+        } catch (MeilisearchApiError e) when (e.Code is "index_not_found" or "document_not_found") {
             return null;
         }
     }
