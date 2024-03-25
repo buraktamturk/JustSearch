@@ -50,7 +50,7 @@ public sealed class MeiliSearchProvider : ISearchIndexProvider
         {
             DisplayedAttributes = fields.Where(a => a.IsRetrievable).Select(a => a.Name),
             SearchableAttributes = fields.Where(a => a.IsSearchable).Select(a => a.Name),
-            FilterableAttributes = fields.Where(a => a.IsFilterable).Select(a => a.Name),
+            FilterableAttributes = fields.Where(a => a.IsFilterable || a.IsFacet).Select(a => a.Name),
             SortableAttributes = fields.Where(a => a.IsSortable).Select(a => a.Name),
             Synonyms = synonyms.SelectMany(GetSynonyms)
                 .GroupBy(a => a.Key)
@@ -59,7 +59,12 @@ public sealed class MeiliSearchProvider : ISearchIndexProvider
             Faceting = new Faceting()
             {
                 MaxValuesPerFacet = 1000
-            }
+            },
+            TypoTolerance = new TypoTolerance()
+            {
+                Enabled = true,
+                DisableOnAttributes = fields.Where(a => a is { IsSearchable: true, NoTypoTolerance: true }).Select(a => a.Name)
+            },
         }, token));
 
         await tasks.WaitForTasks(token);

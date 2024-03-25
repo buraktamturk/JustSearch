@@ -29,5 +29,7 @@ public interface ISearchField
     
     public bool IsSearchable { get; init; }
     
+    public bool NoTypoTolerance { get; init; }
+    
     public bool IsRetrievable { get; init; }
 }
