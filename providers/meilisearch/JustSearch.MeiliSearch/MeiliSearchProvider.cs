@@ -48,7 +48,7 @@ public sealed class MeiliSearchProvider : ISearchIndexProvider
         
         tasks.AddTaskResponse(await index.UpdateSettingsAsync(new Settings()
         {
-            DisplayedAttributes = fields.Where(a => a.IsRetrievable).Select(a => a.Name),
+            DisplayedAttributes = ["id", ..fields.Where(a => a.IsRetrievable).Select(a => a.Name)],
             SearchableAttributes = fields.Where(a => a.IsSearchable).Select(a => a.Name),
             FilterableAttributes = fields.Where(a => a.IsFilterable || a.IsFacet).Select(a => a.Name),
             SortableAttributes = fields.Where(a => a.IsSortable).Select(a => a.Name),
@@ -59,6 +59,10 @@ public sealed class MeiliSearchProvider : ISearchIndexProvider
             Faceting = new Faceting()
             {
                 MaxValuesPerFacet = 1000
+            },
+            Pagination = new Pagination()
+            {
+                MaxTotalHits = 10_000
             },
             TypoTolerance = new TypoTolerance()
             {
