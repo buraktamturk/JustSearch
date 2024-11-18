@@ -55,7 +55,7 @@ public sealed class TypesenseProvider : ISearchIndexProvider
         {
             count += data.Count;
             
-            var response = await _typesenseClient.ImportDocuments<ISearchable>(collection.Name, data.Select(a => JsonSerializer.Serialize(a, a.GetType(), _jsonOptionsCamelCaseIgnoreWritingNull)), data.Count, ImportType.Upsert);
+            var response = await _typesenseClient.ImportDocuments<string>(collection.Name, data.Select(a => JsonSerializer.Serialize(a, a.GetType(), _jsonOptionsCamelCaseIgnoreWritingNull)), data.Count, ImportType.Upsert);
 
             var errors = response.Where(a => a.Error is not null);
             if (errors.Any())

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -13,7 +13,7 @@
     <ItemGroup>
       <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
       <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-      <PackageReference Include="Typesense" Version="7.3.0" />
+      <PackageReference Include="Typesense" Version="7.21.0" />
     </ItemGroup>
 
 </Project>
