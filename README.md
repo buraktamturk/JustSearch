@@ -1,3 +1,9 @@
+## ⚠️ Migration Notice
+
+This repository has been moved to https://codeberg.org/robinsoft/JustSearch
+
+All further developments of this library will continue there.
+
 # JustSearch
 
 This library provides an easy integration to Algolia, TypeSense and MeiliSearch engines. Easy to switch between them or combine them for redundancy.
